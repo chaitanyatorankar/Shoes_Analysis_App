@@ -11,16 +11,20 @@ for col in ['Sales', 'Returns', 'Inventory']:
     df[col] = df[col].replace('[$,]', '', regex=True).astype('int64')
 
 # App title
-st.title("Region Sales Estimator ")
+st.title("Region & Sector Sales Estimator")
 
-# Region selection
+# --- Region selection ---
 regions = df['Region'].unique()
 selected_region = st.selectbox("Select a Region", regions)
 
-# Filter data for the selected region
-filtered_data = df[df['Region'] == selected_region]
+# --- Sector selection (dependent on region) ---
+sectors = df[df['Region'] == selected_region]['Sector'].unique()
+selected_sector = st.selectbox("Select a Sector", sectors)
 
-# Create bar plot
+# --- Filter data ---
+filtered_data = df[(df['Region'] == selected_region) & (df['Sector'] == selected_sector)]
+
+# --- Create bar plot ---
 fig, ax = plt.subplots()
 sb.barplot(x='Subsidiary', y='Sales', data=filtered_data, ax=ax)
 plt.xticks(rotation=90)
