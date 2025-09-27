@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 # Load dataset
-df = pd.read_csv("SHOES.csv")
+df = pd.read_csv("22b72b66-ba33-4cf9-9bee-4d4464f63847.csv")
 
 # Clean and convert numeric columns safely
 for col in ['Sales', 'Returns', 'Inventory']:
@@ -14,14 +14,20 @@ for col in ['Sales', 'Returns', 'Inventory']:
 # App title
 st.title("Shoes Sales Analysis Dashboard")
 
-# --- Theme Toggle ---
-theme = st.radio("Select Theme", ["Light Mode", "Dark Mode"])
+# --- Dark/Light Mode Toggle using button ---
+if "theme" not in st.session_state:
+    st.session_state.theme = "Light"  # default theme
 
-# Set plot style
-if theme == "Dark Mode":
+if st.button("Switch to Dark Mode" if st.session_state.theme == "Light" else "Switch to Light Mode"):
+    st.session_state.theme = "Dark" if st.session_state.theme == "Light" else "Light"
+
+# Apply theme to matplotlib
+if st.session_state.theme == "Dark":
     plt.style.use("dark_background")
 else:
     plt.style.use("default")
+
+st.write(f"Current Theme: **{st.session_state.theme} Mode**")
 
 # --- Region Selection ---
 if "Region" in df.columns:
